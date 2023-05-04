@@ -1,8 +1,13 @@
 
 import 'package:blood_donation_app/onboarding_screen.dart';
+import 'package:blood_donation_app/pages/add_donation.dart';
+import 'package:blood_donation_app/pages/blood_info.dart';
+import 'package:blood_donation_app/pages/contact_us.dart';
+import 'package:blood_donation_app/pages/developer_page.dart';
 import 'package:blood_donation_app/pages/home_page.dart';
 import 'package:blood_donation_app/pages/login_page.dart';
 import 'package:blood_donation_app/pages/register_page.dart';
+import 'package:blood_donation_app/pages/settings_page.dart';
 import 'package:blood_donation_app/pages/splash_screen.dart';
 import 'package:blood_donation_app/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +33,11 @@ class BloodDonation extends StatelessWidget {
         HomePage.id: (context) => HomePage(),
         RegisterPage.id : (context) => RegisterPage(),
         NavBar().id :(context) => NavBar(),
+        BloodInfo.id:(context) => BloodInfo(),
+        DeveloperPage.id:(context) => DeveloperPage(),
+        SettingsPage.id :(context) => SettingsPage(), 
+        ContactUs.id :(context) => ContactUs() , 
+        
       },
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),

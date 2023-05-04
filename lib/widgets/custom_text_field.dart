@@ -3,9 +3,11 @@ import '../constants.dart';
 
 class CustomTextField extends StatelessWidget {
   CustomTextField(
-      {required this.hintText, required this.obscureText, this.onChanged});
+      {required this.hintText, required this.obscureText, this.onChanged , this.icon , this.input});
   String hintText;
   bool obscureText;
+  IconData? icon;
+  TextInputType? input ;
   Function(String)? onChanged;
 
   @override
@@ -14,8 +16,8 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: TextFormField(
         validator: (data) {
-          if (data!.length<8) {
-            return 'Weak ! Please tap correct form ';
+          if (data!.length < 2) {
+            return 'Weak ! Please try again ';
           }
         },
         onChanged: onChanged,
@@ -26,8 +28,10 @@ class CustomTextField extends StatelessWidget {
           color: blackColor,
           fontFamily: 'Alkatra',
         ),
+        keyboardType: input,
         obscureText: obscureText,
         decoration: InputDecoration(
+          prefixIcon: Icon(icon , color: Colors.grey,),
           filled: true,
           fillColor: kSecondaryColor,
           hintText: '$hintText',

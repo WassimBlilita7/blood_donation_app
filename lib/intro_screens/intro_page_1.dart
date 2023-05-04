@@ -7,10 +7,14 @@ class IntroPage1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Intro(
-      text: 'Greetings ! ❤️',
-      desc: 'Welcome to our Application ! Were excited to have you here among us.',
-      imgPath: 'assets/welcome.png',
+    return  Scaffold(
+      backgroundColor: kSecondaryColor,
+      body : 
+       Intro(
+        text: 'Greetings ! ❤️',
+        desc: 'Welcome to our Application ! Were excited to have you here among us.',
+        imgPath: 'assets/welcome.png',
+      ),
     );
   }
 }

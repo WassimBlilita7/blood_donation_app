@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 80,
                   ),
                   CustomTextField(
+                    icon: Icons.email,
                     onChanged: (data) {
                       email = data;
                     },
@@ -69,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 10,
                   ),
                   CustomTextField(
+                    icon: Icons.lock,
                     onChanged: (data) {
                       password = data;
                     },
@@ -88,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                             await loginUser();
                             showSnackBar(context, 'Login with Succeessfully',
                                 Colors.green);
-                            Navigator.pushNamed(context, 'NavBar');
+                            Navigator.pushReplacementNamed(context, 'NavBar');
                           } on FirebaseAuthException catch (e) {
                             showSnackBar(context, e.toString(), Colors.red);
                           }

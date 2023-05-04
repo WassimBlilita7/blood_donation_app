@@ -6,20 +6,36 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/nav_bar.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   static String id = 'RegisterPage';
+  
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String? email, password;
-
+  String? email, password, fullName, city, bloodType;
+  int? age;
+  
+  
   bool isLoading = false;
 
   GlobalKey<FormState> formKey = GlobalKey();
+  final List<String> bloodTypes = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'O+',
+    'O-',
+    'AB+',
+    'AB-'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +51,35 @@ class _RegisterPageState extends State<RegisterPage> {
               child: ListView(
                 children: [
                   const SizedBox(
-                    height: 100,
+                    height: 65,
                   ),
-                  Image.asset(
-                    'assets/register.png',
-                    height: 200,
-                    width: 200,
+                  // Image.asset(
+                  //   'assets/register.png',
+                  //   height: 150,
+                  //   width: 150,
+                  // ),
+                  Column(
+                    children: [
+                      Text(
+                        'Hello There !  🙋‍♂️',
+                        style: TextStyle(
+                          fontFamily: 'Alkatra',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                        ),
+                      ),
+                      Text(
+                        'Register below with your details ! ',
+                        style: TextStyle(fontFamily: 'Alkatra', fontSize: 18),
+                      )
+                    ],
                   ),
+
                   const SizedBox(
-                    height: 25,
-                  ),
-                  const SizedBox(
-                    height: 80,
+                    height: 50,
                   ),
                   CustomTextField(
+                    icon: Icons.email,
                     onChanged: (data) {
                       email = data;
                     },
@@ -59,6 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   CustomTextField(
+                    icon: Icons.lock,
                     onChanged: (data) {
                       password = data;
                     },
@@ -66,7 +98,80 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureText: true,
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 10,
+                  ),
+                  CustomTextField(
+                      input: TextInputType.name,
+                      icon: Icons.person,
+                      onChanged: (data) {
+                        fullName = (data);
+                      },
+                      hintText: 'Full Name',
+                      obscureText: false),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextField(
+                    input: TextInputType.number,
+                    icon: Icons.numbers_sharp,
+                    onChanged: (data) {
+                      age = int.parse(data);
+                    },
+                    hintText: 'Age',
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextField(
+                    onChanged: (data) {
+                      city = data;
+                    },
+                    icon: Icons.location_city,
+                    hintText: 'City',
+                    obscureText: false,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: DropdownButtonFormField<String>(
+                      value: bloodType,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.local_hospital,
+                          color: kPrimaryColor,
+                        ),
+                        filled: true,
+                        fillColor: kSecondaryColor,
+                        hintText: 'Blood Type',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: kPrimaryColor,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: kPrimaryColor,
+                          ),
+                        ),
+                      ),
+                      items: bloodTypes.map((e) {
+                        return DropdownMenuItem(
+                          child: Text(e),
+                          value: e,
+                        );
+                      }).toList(),
+                      onChanged: (data) {
+                        bloodType = data;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
                   ),
                   CustomButton(
                       text: 'Register',
@@ -76,6 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           setState(() {});
                           try {
                             await registerUser();
+
                             showSnackBar(context, 'Register with Succeessfully',
                                 Colors.green);
                             Navigator.pop(context);
@@ -123,10 +229,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  
-
   Future<void> registerUser() async {
     UserCredential user = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email!, password: password!);
+
+    addUserDetails(email!, password!, fullName!, age!, city!, bloodType!);
+  }
+
+  Future addUserDetails(String email, String password, String fullName, int age,
+      String city, String bloodType) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'email': email,
+      'password': password,
+      'full name': fullName,
+      'age': age,
+      'city': city,
+      'Blood Type': bloodType,
+    });
   }
 }

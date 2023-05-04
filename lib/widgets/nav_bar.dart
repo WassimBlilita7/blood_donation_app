@@ -16,7 +16,7 @@ class _NavBarState extends State<NavBar> {
   @override
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
+  static  List<Widget> _pages = <Widget>[
     HomePage(),
     LikePage(),
     SearchPage(),
@@ -35,6 +35,7 @@ class _NavBarState extends State<NavBar> {
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
+      
         body: _pages.elementAt(_selectedIndex),
         bottomNavigationBar: Container(
           color: Colors.grey,
@@ -55,13 +56,13 @@ class _NavBarState extends State<NavBar> {
                       TextStyle(fontFamily: 'Alkatra', color: kSecondaryColor),
                 ),
                 GButton(
-                  icon: Icons.favorite_border,
+                  icon: Icons.notification_add,
                   text: ' Likes',
                   textStyle:
                       TextStyle(fontFamily: 'Alkatra', color: kSecondaryColor),
                 ),
                 GButton(
-                  icon: Icons.search,
+                  icon: Icons.local_hospital,
                   text: ' Search',
                   textStyle:
                       TextStyle(fontFamily: 'Alkatra', color: kSecondaryColor),
