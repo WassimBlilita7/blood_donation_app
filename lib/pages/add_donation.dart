@@ -85,7 +85,7 @@ class _AddDonationState extends State<AddDonation> {
                 cursorColor: kPrimaryColor,
                 controller: titleController,
                 decoration: InputDecoration(
-                  hintText: 'Title',
+                  hintText: 'Your name here',
                   prefixIcon: Icon(
                     Icons.book,
                     color: kPrimaryColor,
@@ -118,7 +118,7 @@ class _AddDonationState extends State<AddDonation> {
                 cursorColor: kPrimaryColor,
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  hintText: 'Desctiption',
+                  hintText: 'Any disease mentioned here',
                   prefixIcon: Icon(
                     Icons.description,
                     color: kPrimaryColor,

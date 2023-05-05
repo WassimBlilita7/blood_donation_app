@@ -1,10 +1,12 @@
 
 import 'package:blood_donation_app/onboarding_screen.dart';
 import 'package:blood_donation_app/pages/add_donation.dart';
+import 'package:blood_donation_app/pages/admin_page.dart';
 import 'package:blood_donation_app/pages/blood_info.dart';
 import 'package:blood_donation_app/pages/contact_us.dart';
 import 'package:blood_donation_app/pages/developer_page.dart';
 import 'package:blood_donation_app/pages/home_page.dart';
+import 'package:blood_donation_app/pages/list_donor.dart';
 import 'package:blood_donation_app/pages/login_page.dart';
 import 'package:blood_donation_app/pages/register_page.dart';
 import 'package:blood_donation_app/pages/settings_page.dart';
@@ -37,6 +39,7 @@ class BloodDonation extends StatelessWidget {
         DeveloperPage.id:(context) => DeveloperPage(),
         SettingsPage.id :(context) => SettingsPage(), 
         ContactUs.id :(context) => ContactUs() , 
+        ListDonor.id :(context) => ListDonor(), 
         
       },
       debugShowCheckedModeBanner: false,

@@ -1,5 +1,8 @@
 import 'package:blood_donation_app/constants.dart';
 import 'package:blood_donation_app/pages/add_donation.dart';
+import 'package:blood_donation_app/pages/edit_profile.dart';
+import 'package:blood_donation_app/pages/history_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,26 +39,29 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(width: 20),
-                  HomeContainer(
-                      color: Color(0xffFC9292),
-                      image: 'assets/history.png',
-                      title: 'History',
-                      description: " request History ")
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DonationHistory();
+                      }));
+                    },
+                    child: HomeContainer(
+                        color: Color(0xffFC9292),
+                        image: 'assets/history.png',
+                        title: 'History',
+                        description: " request History "),
+                  )
                 ],
               ),
               Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      
-                    },
-                    child: HomeContainer(
-                      color: Color(0xff4EA0E2),
-                      image: 'assets/profile.png',
-                      title: 'Profile',
-                      description: "View  profil ",
-                      txtColor: kSecondaryColor,
-                    ),
+                  HomeContainer(
+                    color: Color(0xff4EA0E2),
+                    image: 'assets/profile.png',
+                    title: 'Profile',
+                    description: "View  profil ",
+                    txtColor: kSecondaryColor,
                   ),
                   SizedBox(
                     width: 20,

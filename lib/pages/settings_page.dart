@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:blood_donation_app/constants.dart';
 import 'package:blood_donation_app/helper/show_snack_bar.dart';
+import 'package:blood_donation_app/pages/admin_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
@@ -32,12 +33,15 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  AppSettings.openWIFISettings();
+                  
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return AdminPage();
+                  }));
                 },
                 child: SettingsWidget(
                   color: Colors.grey,
-                  text: 'Turn on WI-FI',
-                  icon: Icons.wifi,
+                  text: 'ADMIN',
+                  icon: Icons.admin_panel_settings,
                 ),
               ),
               GestureDetector(
