@@ -1,4 +1,5 @@
 import 'package:blood_donation_app/constants.dart';
+import 'package:blood_donation_app/pages/find_donor.dart';
 import 'package:blood_donation_app/pages/list_donor.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class _LikePageState extends State<LikePage> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return ListDonor();
+                      return SearchDonation();
                     }));
                   },
                   child: DonorContainer(

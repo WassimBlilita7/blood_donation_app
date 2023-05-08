@@ -33,15 +33,12 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return AdminPage();
-                  }));
+                  AppSettings.openWIFISettings();
                 },
                 child: SettingsWidget(
                   color: Colors.grey,
-                  text: 'ADMIN',
-                  icon: Icons.admin_panel_settings,
+                  text: 'Turn on WIFI',
+                  icon: Icons.wifi,
                 ),
               ),
               GestureDetector(

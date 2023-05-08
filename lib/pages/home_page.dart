@@ -3,6 +3,7 @@ import 'package:blood_donation_app/pages/add_donation.dart';
 import 'package:blood_donation_app/pages/edit_profile.dart';
 import 'package:blood_donation_app/pages/history_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,12 +57,22 @@ class _HomePageState extends State<HomePage> {
               ),
               Row(
                 children: [
-                  HomeContainer(
-                    color: Color(0xff4EA0E2),
-                    image: 'assets/profile.png',
-                    title: 'Profile',
-                    description: "View  profil ",
-                    txtColor: kSecondaryColor,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                         builder: (context) => UserProfilePage(),
+                      ),
+                    );
+                    },
+                    child: HomeContainer(
+                      color: Color(0xff4EA0E2),
+                      image: 'assets/profile.png',
+                      title: 'Profile',
+                      description: "View  profil ",
+                      txtColor: kSecondaryColor,
+                    ),
                   ),
                   SizedBox(
                     width: 20,

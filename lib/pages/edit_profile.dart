@@ -1,69 +1,39 @@
-import 'package:flutter/material.dart';
+import 'package:blood_donation_app/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class UpdateProfilePage extends StatefulWidget {
-  final String userId;
-  final String fullName;
-  final int age;
-  final String bloodType;
-  final String city;
-
-  UpdateProfilePage({
-    required this.userId,
-    required this.fullName,
-    required this.age,
-    required this.bloodType,
-    required this.city,
-  });
-
+class UserProfilePage extends StatefulWidget {
   @override
-  _UpdateProfilePageState createState() => _UpdateProfilePageState();
+  _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-class _UpdateProfilePageState extends State<UpdateProfilePage> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _fullNameController;
-  late TextEditingController _ageController;
-  late TextEditingController _bloodTypeController;
-  late TextEditingController _cityController;
+class _UserProfilePageState extends State<UserProfilePage> {
+  late String _userId;
+   Stream<DocumentSnapshot>? _userStream = null;
 
   @override
   void initState() {
     super.initState();
-    _fullNameController = TextEditingController(text: widget.fullName);
-    _ageController = TextEditingController(text: widget.age.toString());
-    _bloodTypeController = TextEditingController(text: widget.bloodType);
-    _cityController = TextEditingController(text: widget.city);
-  }
 
-  @override
-  void dispose() {
-    _fullNameController.dispose();
-    _ageController.dispose();
-    _bloodTypeController.dispose();
-    _cityController.dispose();
-    super.dispose();
-  }
+    // Get the current user after login
+    final user = FirebaseAuth.instance.currentUser;
 
-  void _updateProfile() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(widget.userId)
-            .update({
-          'full name': _fullNameController.text.trim(),
-          'age': int.tryParse(_ageController.text.trim()) ?? 0,
-          'Blood Type': _bloodTypeController.text.trim(),
-          'city': _cityController.text.trim(),
-        });
-        Navigator.pop(context, true); // Navigate back to previous page
-      } catch (e) {
-        print(e.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating profile')),
-        );
-      }
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('users').where('email', isEqualTo: user.email).limit(1);
+
+      // Retrieve the user's document from the 'users' collection using the email
+      userRef.get().then((QuerySnapshot querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          final userDoc = querySnapshot.docs.first;
+          _userId = userDoc.id;
+
+          // Listen for updates to the user's document using a stream
+          _userStream = userDoc.reference.snapshots();
+        }
+      }).catchError((error) {
+        print('Error retrieving user document: $error');
+      });
     }
   }
 
@@ -71,68 +41,73 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Profile'),
+        backgroundColor: kPrimaryColor,
+
+        title: Text('User Profile' , style: optionStyle,),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _fullNameController,
-                decoration: InputDecoration(labelText: 'Full Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your full name';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                controller: _ageController,
-                decoration: InputDecoration(labelText: 'Age'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your age';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                controller: _bloodTypeController,
-                decoration: InputDecoration(labelText: 'Blood Type'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your blood type';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
-              TextFormField(
-                controller: _cityController,
-                decoration: InputDecoration(labelText: 'City'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your city';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 32.0),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: Text('Update Profile'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: _userStream == null
+          ? Center(child: CircularProgressIndicator())
+          : StreamBuilder<DocumentSnapshot>(
+              stream: _userStream!,
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return Text('User not found.');
+                }
+
+                // Retrieve the user's document data and display it in the UI
+                final userData = snapshot.data!;
+                final fullName = userData['full name'] as String?;
+                final age = userData['age'] as int?;
+                final city = userData['city'] as String?;
+                final bloodType = userData['Blood Type'] as String?;
+                final email = FirebaseAuth.instance.currentUser?.email;
+
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox(height: 50,),
+                      Image.asset('assets/profile.png' , height: 200, width: 200,),
+                      const SizedBox(height: 100,),
+                      Text(
+                        'Full Name: $fullName',
+                        style: TextStyle(fontSize: 18 , fontFamily: 'Alkatra' , ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Age: $age',
+                        style: TextStyle(fontSize: 18 , fontFamily: 'Alkatra'),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'City: $city',
+                        style: TextStyle(fontSize: 18 , fontFamily: 'Alkatra'),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Blood Type: $bloodType',
+                        style: TextStyle(fontSize: 18 , fontFamily: 'Alkatra'),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Email: $email',
+                        style: TextStyle(fontSize: 18 , fontFamily: 'Alkatra'),
+                      ),
+                      const SizedBox(height: 50,)
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 }

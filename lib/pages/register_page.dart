@@ -232,6 +232,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> registerUser() async {
     UserCredential user = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email!, password: password!);
+        
+        
 
     addUserDetails(email!, password!, fullName!, age!, city!, bloodType!);
   }
@@ -247,4 +249,6 @@ class _RegisterPageState extends State<RegisterPage> {
       'Blood Type': bloodType,
     });
   }
+  
 }
+
